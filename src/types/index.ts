@@ -16,6 +16,10 @@ export interface ExamResult {
   unanswered_count: number
   submitted_at: string
   candidate_name: string
+  rank?: number
+  total_candidates?: number
+  average_score?: number
+  highest_score?: number
   questions_with_answers: Array<{
     question_number: number
     question_text: string
