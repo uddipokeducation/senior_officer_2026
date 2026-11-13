@@ -7,10 +7,20 @@ export function ProtectedAdminRoute({ children }: { children: React.ReactNode })
   const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (!session) { setChecking(false); return }
-      const { data } = await supabase.from('admin_users').select('id').eq('id', session.user.id).single()
-      setIsAdmin(!!data)
+    // 1. Check local admin session
+    if (sessionStorage.getItem('admin_session') === 'true') {
+      setIsAdmin(true)
+      setChecking(false)
+      return
+    }
+
+    // 2. Check Supabase Auth session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setIsAdmin(true)
+      }
+      setChecking(false)
+    }).catch(() => {
       setChecking(false)
     })
   }, [])
