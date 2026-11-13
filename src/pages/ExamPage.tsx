@@ -62,18 +62,18 @@ export default function ExamPage() {
     async function loadQuestions() {
       try {
         const { data: attempt, error: aErr } = await supabase
-          .from('exam_attempts')
-          .select('examination_id, status, candidates(full_name)')
-          .eq('id', attemptId!)
-          .single()
+          .rpc('get_attempt_info_rpc', { p_attempt_id: attemptId })
 
         if (aErr || !attempt) { navigate('/'); return }
         if (attempt.status === 'submitted') { navigate(`/result/${attemptId}`); return }
 
-        const cand = attempt.candidates as unknown as { full_name: string } | null
-        if (cand && typeof cand === 'object' && 'full_name' in cand) {
-          setCandidateName(cand.full_name || '')
-        }
+        // Server expiry is authoritative (works even if localStorage was cleared)
+        setCandidateName(attempt.candidate_name || '')
+        examStorage.saveAttempt(attemptId!, attempt.expires_at, attempt.candidate_name || '')
+        const skew = new Date(attempt.server_now).getTime() - Date.now()
+        const remaining = Math.max(0, Math.floor((new Date(attempt.expires_at).getTime() - Date.now() - skew) / 1000))
+        if (remaining <= 0) { handleAutoSubmit(); return }
+        setTimeLeft(remaining)
 
         const { data: qs, error: qErr } = await supabase
           .from('questions')
