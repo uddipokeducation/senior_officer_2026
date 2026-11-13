@@ -1,0 +1,23 @@
+[api]
+port = 54321
+
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+port = 54323
+
+[inbucket]
+port = 54324
+
+[storage]
+enabled = true
+
+[auth]
+site_url = "https://uddipokeducation.github.io/senior_officer_2026"
+additional_redirect_urls = ["http://localhost:5173", "http://localhost:5173/senior_officer_2026"]
+jwt_expiry = 3600
+
+[auth.email]
+enable_signup = true
