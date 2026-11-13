@@ -5,12 +5,30 @@ import { api } from '../lib/api'
 import { examStorage } from '../lib/examStorage'
 import type { Question } from '../types'
 
+interface Section {
+  id: string
+  name: string
+  shortName: string
+  startNum: number
+  endNum: number
+  icon: string
+}
+
+const SECTIONS: Section[] = [
+  { id: 'english', name: 'English Language & Literature', shortName: 'English', startNum: 1, endNum: 20, icon: '📖' },
+  { id: 'bangla', name: 'বাংলা ভাষা ও সাহিত্য', shortName: 'বাংলা', startNum: 21, endNum: 40, icon: '🇧🇩' },
+  { id: 'math', name: 'Mathematics & Quantitative Aptitude', shortName: 'Math', startNum: 41, endNum: 60, icon: '📐' },
+  { id: 'banking', name: 'Banking, Finance & Economics', shortName: 'Banking', startNum: 61, endNum: 70, icon: '🏦' },
+  { id: 'reasoning', name: 'Mental Ability & Logical Reasoning', shortName: 'Reasoning', startNum: 71, endNum: 90, icon: '🧠' },
+  { id: 'ict', name: 'Information & Communication Tech (ICT)', shortName: 'ICT', startNum: 91, endNum: 100, icon: '💻' },
+]
+
 export default function ExamPage() {
   const { attemptId } = useParams<{ attemptId: string }>()
   const navigate = useNavigate()
   const [questions, setQuestions] = useState<Question[]>([])
   const [answers, setAnswers] = useState<Record<string, string>>({})
-  const [currentIdx, setCurrentIdx] = useState(0)
+  const [activeSectionIdx, setActiveSectionIdx] = useState(0)
   const [timeLeft, setTimeLeft] = useState(3600)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
@@ -87,10 +105,17 @@ export default function ExamPage() {
   }, [loading, handleAutoSubmit])
 
   async function selectAnswer(questionId: string, option: string) {
-    const newAnswers = { ...answers, [questionId]: option }
+    const isAlreadySelected = answers[questionId] === option
+    const newOption = isAlreadySelected ? null : option
+    const newAnswers = { ...answers }
+    if (newOption === null) {
+      delete newAnswers[questionId]
+    } else {
+      newAnswers[questionId] = newOption
+    }
     setAnswers(newAnswers)
-    examStorage.saveAnswer(questionId, option)
-    api.saveAnswer(attemptId!, questionId, option).catch(console.error)
+    examStorage.saveAnswer(questionId, newOption)
+    api.saveAnswer(attemptId!, questionId, newOption).catch(console.error)
   }
 
   async function handleSubmit() {
@@ -113,117 +138,213 @@ export default function ExamPage() {
     return `${m}:${s}`
   }
 
+  function scrollToQuestion(qNum: number) {
+    const el = document.getElementById(`q-${qNum}`)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }
+
   if (loading) return <div className="loading-screen"><div className="spinner"></div><p>Loading examination...</p></div>
   if (error) return <div className="loading-screen"><div className="alert alert-error">{error}</div></div>
 
-  const currentQ = questions[currentIdx]
-  const answeredCount = questions.filter(q => answers[q.id]).length
-  const unansweredCount = questions.length - answeredCount
+  const currentSection = SECTIONS[activeSectionIdx]
+  const sectionQuestions = questions.filter(
+    q => q.question_number >= currentSection.startNum && q.question_number <= currentSection.endNum
+  )
+
+  const totalAnswered = questions.filter(q => answers[q.id]).length
+  const totalUnanswered = questions.length - totalAnswered
   const timerClass = `timer${timeLeft < 300 ? ' danger' : timeLeft < 600 ? ' warning' : ''}`
 
   return (
-    <div>
+    <div style={{minHeight:'100vh', display:'flex', flexDirection:'column'}}>
       <header className="exam-header">
         <div className="exam-header-inner">
           <div>
             <div className="exam-title">Senior Officer 2026</div>
-            <div className="exam-subtitle">👤 {candidateName}</div>
+            <div className="exam-subtitle">👤 Candidate: <strong>{candidateName}</strong></div>
           </div>
           <div className={timerClass}>⏱ {formatTime(timeLeft)}</div>
         </div>
       </header>
 
-      <div className="exam-layout">
-        {currentQ && (
-          <div className="question-card">
-            <div className="question-header">
-              <span className="question-num">Question {currentQ.question_number} of {questions.length}</span>
-              {currentQ.subject && <span className="question-subject">{currentQ.subject}</span>}
-            </div>
-            <div className="question-text">{currentQ.question_text}</div>
-            <ul className="options-list">
-              {(['A','B','C','D'] as const).map(opt => {
-                const key = `option_${opt.toLowerCase()}` as keyof Question
-                const optText = currentQ[key] as string
-                const selected = answers[currentQ.id] === opt
-                return (
-                  <li key={opt}>
-                    <button
-                      className={`option-btn${selected ? ' selected' : ''}`}
-                      onClick={() => selectAnswer(currentQ.id, opt)}
-                      disabled={submitting}
-                    >
-                      <span className="opt-label">{opt}.</span>
-                      <span>{optText}</span>
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
-            <div className="nav-buttons">
-              <button className="btn btn-secondary"
-                onClick={() => setCurrentIdx(i => Math.max(0, i - 1))}
-                disabled={currentIdx === 0}>
-                ← Previous
+      {/* SECTION TABS NAVIGATION */}
+      <div className="section-tabs-bar">
+        <div className="section-tabs-inner">
+          {SECTIONS.map((sec, idx) => {
+            const secQs = questions.filter(q => q.question_number >= sec.startNum && q.question_number <= sec.endNum)
+            const secAnswered = secQs.filter(q => answers[q.id]).length
+            const isActive = idx === activeSectionIdx
+            return (
+              <button
+                key={sec.id}
+                className={`section-tab-btn${isActive ? ' active' : ''}`}
+                onClick={() => {
+                  setActiveSectionIdx(idx)
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }}
+              >
+                <span className="sec-icon">{sec.icon}</span>
+                <span className="sec-name">{sec.shortName}</span>
+                <span className={`sec-badge ${secAnswered === secQs.length && secQs.length > 0 ? 'complete' : ''}`}>
+                  {secAnswered}/{secQs.length}
+                </span>
               </button>
-              <span style={{fontSize:'0.85rem',color:'var(--text-muted)'}}>
-                {answeredCount} / {questions.length} answered
-              </span>
-              <button className="btn btn-primary"
-                onClick={() => setCurrentIdx(i => Math.min(questions.length - 1, i + 1))}
-                disabled={currentIdx === questions.length - 1}>
-                Next →
-              </button>
-            </div>
-          </div>
-        )}
+            )
+          })}
+        </div>
+      </div>
 
-        <div className="question-nav-panel">
-          <div className="nav-panel-title">📋 Question Navigator</div>
-          <div className="nav-legend">
-            <div className="legend-item"><div className="legend-dot answered"></div>Answered</div>
-            <div className="legend-item"><div className="legend-dot current"></div>Current</div>
-            <div className="legend-item"><div className="legend-dot unanswered"></div>Unanswered</div>
+      <div className="exam-layout">
+        {/* MAIN SECTION QUESTIONS LIST */}
+        <div className="section-content">
+          <div className="section-banner">
+            <div>
+              <h2>{currentSection.icon} {currentSection.name}</h2>
+              <p>Questions {currentSection.startNum} to {currentSection.endNum} ({sectionQuestions.length} Questions)</p>
+            </div>
+            <div className="section-progress">
+              {sectionQuestions.filter(q => answers[q.id]).length} of {sectionQuestions.length} Answered
+            </div>
           </div>
-          <div className="nav-grid">
-            {questions.map((q, idx) => {
-              const isAnswered = !!answers[q.id]
-              const isCurrent = idx === currentIdx
-              let cls = 'nav-cell'
-              if (isCurrent && isAnswered) cls += ' current-answered'
-              else if (isCurrent) cls += ' current'
-              else if (isAnswered) cls += ' answered'
+
+          <div className="questions-container">
+            {sectionQuestions.map((q) => {
+              const selectedOpt = answers[q.id]
               return (
-                <button key={q.id} className={cls} onClick={() => setCurrentIdx(idx)}>
-                  {q.question_number}
-                </button>
+                <div key={q.id} id={`q-${q.question_number}`} className="question-item-card">
+                  <div className="q-item-header">
+                    <span className="q-item-number">Q. {q.question_number}</span>
+                    {selectedOpt && <span className="q-answered-tag">✓ Answered ({selectedOpt})</span>}
+                  </div>
+                  <div className="q-item-text">{q.question_text}</div>
+
+                  <div className="q-options-grid">
+                    {(['A','B','C','D'] as const).map(opt => {
+                      const key = `option_${opt.toLowerCase()}` as keyof Question
+                      const optText = q[key] as string
+                      const isSelected = selectedOpt === opt
+                      return (
+                        <button
+                          key={opt}
+                          className={`q-opt-btn${isSelected ? ' selected' : ''}`}
+                          onClick={() => selectAnswer(q.id, opt)}
+                          disabled={submitting}
+                        >
+                          <span className="opt-circle">{opt}</span>
+                          <span className="opt-text">{optText}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
               )
             })}
           </div>
-          <div className="nav-stats">
-            <div className="nav-stat-row"><span>✅ Answered</span><strong>{answeredCount}</strong></div>
-            <div className="nav-stat-row"><span>⬜ Unanswered</span><strong>{unansweredCount}</strong></div>
-            <div className="nav-stat-row"><span>📊 Total</span><strong>{questions.length}</strong></div>
+
+          {/* SECTION NAVIGATION BUTTONS */}
+          <div className="section-nav-footer">
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                setActiveSectionIdx(i => Math.max(0, i - 1))
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }}
+              disabled={activeSectionIdx === 0}
+            >
+              ← Previous Section
+            </button>
+
+            {activeSectionIdx < SECTIONS.length - 1 ? (
+              <button
+                className="btn btn-primary"
+                style={{width:'auto'}}
+                onClick={() => {
+                  setActiveSectionIdx(i => Math.min(SECTIONS.length - 1, i + 1))
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }}
+              >
+                Next Section ({SECTIONS[activeSectionIdx + 1].shortName}) →
+              </button>
+            ) : (
+              <button
+                className="btn btn-danger"
+                style={{width:'auto'}}
+                onClick={() => setShowConfirm(true)}
+              >
+                🏁 Finish & Submit Exam
+              </button>
+            )}
           </div>
-          <button className="submit-exam-btn" onClick={() => setShowConfirm(true)} disabled={submitting}>
-            {submitting ? '⏳ Submitting...' : '🏁 Submit Examination'}
-          </button>
         </div>
+
+        {/* SIDEBAR PANEL */}
+        <aside className="exam-sidebar">
+          <div className="sidebar-card">
+            <div className="sidebar-title">⚡ Quick Jump ({currentSection.shortName})</div>
+            <div className="sidebar-grid">
+              {sectionQuestions.map(q => {
+                const isAnswered = !!answers[q.id]
+                return (
+                  <button
+                    key={q.id}
+                    className={`sidebar-q-btn${isAnswered ? ' answered' : ''}`}
+                    onClick={() => scrollToQuestion(q.question_number)}
+                  >
+                    {q.question_number}
+                  </button>
+                )
+              })}
+            </div>
+
+            <div className="overall-summary">
+              <div className="summary-title">📊 Overall Progress</div>
+              <div className="summary-row">
+                <span>Total Answered</span>
+                <strong style={{color:'var(--success)'}}>{totalAnswered} / {questions.length}</strong>
+              </div>
+              <div className="summary-row">
+                <span>Total Remaining</span>
+                <strong style={{color:'var(--warning)'}}>{totalUnanswered}</strong>
+              </div>
+              <div className="progress-bar-bg">
+                <div
+                  className="progress-bar-fill"
+                  style={{width: `${questions.length ? (totalAnswered/questions.length)*100 : 0}%`}}
+                ></div>
+              </div>
+            </div>
+
+            <button
+              className="submit-exam-btn"
+              style={{marginTop:'1.2rem'}}
+              onClick={() => setShowConfirm(true)}
+              disabled={submitting}
+            >
+              {submitting ? '⏳ Submitting...' : '🏁 Submit Examination'}
+            </button>
+          </div>
+        </aside>
       </div>
 
       {showConfirm && (
         <div className="modal-overlay">
           <div className="modal">
             <h2>⚠️ Submit Examination?</h2>
-            <p>Once submitted, you cannot change your answers.</p>
+            <p>Once submitted, your examination will be finalized and evaluated. You will not be able to modify your answers.</p>
             <div className="modal-stats">
-              <div className="modal-stat-row"><span>✅ Answered</span><strong>{answeredCount}</strong></div>
-              <div className="modal-stat-row"><span>⬜ Unanswered</span><strong>{unansweredCount}</strong></div>
-              <div className="modal-stat-row"><span>⏱ Time Left</span><strong>{formatTime(timeLeft)}</strong></div>
+              <div className="modal-stat-row"><span>✅ Total Answered</span><strong>{totalAnswered} / {questions.length}</strong></div>
+              <div className="modal-stat-row"><span>⬜ Total Unanswered</span><strong>{totalUnanswered}</strong></div>
+              <div className="modal-stat-row"><span>⏱ Remaining Time</span><strong>{formatTime(timeLeft)}</strong></div>
             </div>
             <div className="modal-actions">
-              <button className="btn btn-secondary" onClick={() => setShowConfirm(false)}>Cancel</button>
-              <button className="btn btn-danger" onClick={handleSubmit}>Submit Now</button>
+              <button className="btn btn-secondary" onClick={() => setShowConfirm(false)}>
+                Continue Exam
+              </button>
+              <button className="btn btn-danger" onClick={handleSubmit}>
+                Yes, Submit Now
+              </button>
             </div>
           </div>
         </div>
