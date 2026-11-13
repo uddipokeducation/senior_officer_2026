@@ -38,7 +38,11 @@ export const api = {
   },
 
   getAdminStats: async () => {
-    // Queries database directly using candidate and attempt views
+    // Call server-side get_admin_stats_rpc
+    const { data, error } = await supabase.rpc('get_admin_stats_rpc')
+    if (!error && data) return data
+
+    // Fallback if RPC function not yet run
     const [
       { count: totalCandidates },
       { data: attempts },
