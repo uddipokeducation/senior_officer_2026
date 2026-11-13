@@ -31,7 +31,6 @@ export default function ResultPage() {
   const scoreClass = scoreNum >= 70 ? 'score-high' : scoreNum >= 40 ? 'score-mid' : 'score-low'
   const submittedDate = result.submitted_at ? new Date(result.submitted_at) : new Date()
   const questionsList = result.questions_with_answers || []
-  const qrUrl = (import.meta.env.BASE_URL || '/senior_officer_2026/').replace(/\/+$/, '') + '/whatsapp_qr.jpg'
 
   return (
     <div className="result-page">
@@ -64,84 +63,6 @@ export default function ResultPage() {
         <div className="result-stat-card">
           <div className="value unanswered-val">{result.unanswered_count ?? 0}</div>
           <div className="label">⬜ Unanswered (0.00)</div>
-        </div>
-      </div>
-
-      {/* WHATSAPP COMMUNITY JOIN BANNER */}
-      <div style={{
-        background: 'linear-gradient(135deg, #075e54 0%, #128c7e 100%)',
-        color: 'white',
-        borderRadius: '16px',
-        padding: '1.5rem',
-        margin: '1.5rem 0 2rem',
-        boxShadow: '0 8px 24px rgba(7, 94, 84, 0.25)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '1.5rem'
-      }}>
-        <div style={{flex: '1 1 300px'}}>
-          <div style={{
-            display: 'inline-block',
-            background: 'rgba(255,255,255,0.2)',
-            padding: '0.2rem 0.7rem',
-            borderRadius: '20px',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-            marginBottom: '0.5rem',
-            letterSpacing: '0.3px'
-          }}>
-            💬 WhatsApp Community
-          </div>
-          <h2 style={{fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.5rem', lineHeight: 1.3}}>
-            পরবর্তী পরীক্ষাগুলোতে অংশ নিতে আমাদের WhatsApp Community-তে যুক্ত হোন!
-          </h2>
-          <p style={{fontSize: '0.92rem', opacity: 0.9, marginBottom: '1.2rem', lineHeight: 1.5}}>
-            উদ্দিপক এডুকেশনের সকল মডেল টেস্ট, জব সলিউশন এবং পরীক্ষার নোটিশ সরাসরি পেতে এখনই যোগ দিন।
-          </p>
-          <a
-            href="https://chat.whatsapp.com/FwULKQJRU93ALasMI6J8g9"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              background: '#25d366',
-              color: '#075e54',
-              padding: '0.8rem 1.6rem',
-              borderRadius: '30px',
-              fontWeight: 800,
-              fontSize: '1rem',
-              textDecoration: 'none',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-              transition: 'transform 0.15s ease'
-            }}
-          >
-            <span>👉 Join WhatsApp Community</span>
-          </a>
-        </div>
-
-        <div style={{
-          textAlign: 'center',
-          background: 'white',
-          padding: '0.8rem',
-          borderRadius: '12px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          margin: '0 auto'
-        }}>
-          <img
-            src={qrUrl}
-            alt="Uddipok Education WhatsApp QR Code"
-            style={{width: '180px', height: 'auto', borderRadius: '8px', display: 'block'}}
-          />
-          <span style={{color: '#075e54', fontSize: '0.75rem', fontWeight: 700, marginTop: '0.5rem'}}>
-            Scan to Join Community
-          </span>
         </div>
       </div>
 
