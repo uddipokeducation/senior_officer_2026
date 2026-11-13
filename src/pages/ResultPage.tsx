@@ -157,14 +157,14 @@ export default function ResultPage() {
               </p>
             </div>
 
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#a7f3d0', fontWeight: 700 }}>
+            <div className="scorecard-cand-info">
+              <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#a7f3d0', fontWeight: 700 }}>
                 Candidate Name
               </div>
-              <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', marginTop: '0.1rem' }}>
+              <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', marginTop: '0.1rem' }}>
                 {result.candidate_name || 'Candidate'}
               </div>
-              <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.75)', marginTop: '0.15rem', fontFamily: 'var(--font-mono)' }}>
+              <div style={{ fontSize: '0.76rem', color: 'rgba(255,255,255,0.75)', marginTop: '0.15rem', fontFamily: 'var(--font-mono)' }}>
                 {submittedDate.toLocaleString('en-BD', { timeZone: 'Asia/Dhaka' })}
               </div>
             </div>
@@ -275,104 +275,75 @@ export default function ResultPage() {
           </div>
 
           {/* COHORT STANDING: RANK, TOTAL EXAMINEES, AVERAGE SCORE, TOP SCORE */}
-          <div
-            style={{
-              borderTop: '1px solid var(--slate-200)',
-              background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)',
-              padding: '1.25rem 2rem',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: '0.85rem',
-                flexWrap: 'wrap',
-                gap: '0.5rem',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--brand-800)' }}>
-                <Icons.Users size={15} style={{ color: 'var(--brand-600)' }} />
+          <div className="cohort-standing-section">
+            <div className="cohort-standing-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--brand-800)' }}>
+                <Icons.Users size={15} style={{ color: 'var(--brand-600)', flexShrink: 0 }} />
                 <span>Merit Position & Cohort Standing (মেধাক্রম ও সামগ্রিক পরিসংখ্যান)</span>
               </div>
-              <span style={{ fontSize: '0.75rem', color: 'var(--slate-500)', fontWeight: 600 }}>
+              <span style={{ fontSize: '0.74rem', color: 'var(--slate-500)', fontWeight: 600 }}>
                 Live Ranking Across All Submitted Candidates
               </span>
             </div>
 
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
-                gap: '0.85rem',
-              }}
-            >
-              <div style={{ background: '#ffffff', border: '1px solid var(--brand-200)', borderRadius: '12px', padding: '0.9rem 1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: 'var(--shadow-xs)' }}>
+            <div className="cohort-standing-grid">
+              <div className="cohort-stat-card highlight">
                 <div>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--slate-500)' }}>
-                    Your Merit Rank
-                  </div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.55rem', fontWeight: 800, color: 'var(--brand-700)', lineHeight: 1.2, marginTop: '0.15rem' }}>
+                  <div className="cohort-stat-label">Your Merit Rank</div>
+                  <div className="cohort-stat-val" style={{ color: 'var(--brand-700)' }}>
                     #{candidateRank}
                   </div>
-                  <div style={{ fontSize: '0.74rem', color: 'var(--slate-500)', fontWeight: 600, marginTop: '0.15rem', fontFamily: 'var(--font-bn)' }}>
+                  <div className="cohort-stat-sub">
                     মোট {totalExaminees} জন পরীক্ষার্থীর মধ্যে
                   </div>
                 </div>
-                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--brand-50)', color: 'var(--brand-700)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Icons.Award size={20} />
+                <div className="cohort-stat-icon" style={{ background: 'var(--brand-50)', color: 'var(--brand-700)' }}>
+                  <Icons.Award size={19} />
                 </div>
               </div>
 
-              <div style={{ background: '#ffffff', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '0.9rem 1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: 'var(--shadow-xs)' }}>
+              <div className="cohort-stat-card">
                 <div>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--slate-500)' }}>
-                    Total Examinees
-                  </div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.55rem', fontWeight: 800, color: 'var(--slate-900)', lineHeight: 1.2, marginTop: '0.15rem' }}>
+                  <div className="cohort-stat-label">Total Examinees</div>
+                  <div className="cohort-stat-val" style={{ color: 'var(--slate-900)' }}>
                     {totalExaminees}
                   </div>
-                  <div style={{ fontSize: '0.74rem', color: 'var(--slate-500)', fontWeight: 600, marginTop: '0.15rem', fontFamily: 'var(--font-bn)' }}>
+                  <div className="cohort-stat-sub">
                     পরীক্ষা সম্পন্ন করেছেন
                   </div>
                 </div>
-                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--slate-100)', color: 'var(--slate-700)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Icons.Users size={20} />
+                <div className="cohort-stat-icon" style={{ background: 'var(--slate-100)', color: 'var(--slate-700)' }}>
+                  <Icons.Users size={19} />
                 </div>
               </div>
 
-              <div style={{ background: '#ffffff', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '0.9rem 1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: 'var(--shadow-xs)' }}>
+              <div className="cohort-stat-card">
                 <div>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--slate-500)' }}>
-                    Average Score (গড় নম্বর)
-                  </div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.55rem', fontWeight: 800, color: '#0369a1', lineHeight: 1.2, marginTop: '0.15rem' }}>
+                  <div className="cohort-stat-label">Average Score (গড়)</div>
+                  <div className="cohort-stat-val" style={{ color: '#0369a1' }}>
                     {averageScore.toFixed(2)}
                   </div>
-                  <div style={{ fontSize: '0.74rem', color: diffFromAvg >= 0 ? 'var(--brand-700)' : 'var(--danger)', fontWeight: 700, marginTop: '0.15rem' }}>
-                    {diffFromAvg >= 0 ? `+${diffFromAvg.toFixed(2)} Above Average` : `${diffFromAvg.toFixed(2)} Below Average`}
+                  <div className="cohort-stat-sub" style={{ color: diffFromAvg >= 0 ? 'var(--brand-700)' : 'var(--danger)', fontWeight: 700 }}>
+                    {diffFromAvg >= 0 ? `+${diffFromAvg.toFixed(2)} Above Avg` : `${diffFromAvg.toFixed(2)} Below Avg`}
                   </div>
                 </div>
-                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#e0f2fe', color: '#0369a1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Icons.BarChart size={20} />
+                <div className="cohort-stat-icon" style={{ background: '#e0f2fe', color: '#0369a1' }}>
+                  <Icons.BarChart size={19} />
                 </div>
               </div>
 
-              <div style={{ background: '#ffffff', border: '1px solid var(--slate-200)', borderRadius: '12px', padding: '0.9rem 1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: 'var(--shadow-xs)' }}>
+              <div className="cohort-stat-card">
                 <div>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--slate-500)' }}>
-                    Highest Score (সর্বোচ্চ)
-                  </div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.55rem', fontWeight: 800, color: 'var(--brand-800)', lineHeight: 1.2, marginTop: '0.15rem' }}>
+                  <div className="cohort-stat-label">Highest Score (সর্বোচ্চ)</div>
+                  <div className="cohort-stat-val" style={{ color: 'var(--brand-800)' }}>
                     {highestScore.toFixed(2)}
                   </div>
-                  <div style={{ fontSize: '0.74rem', color: 'var(--slate-500)', fontWeight: 600, marginTop: '0.15rem' }}>
+                  <div className="cohort-stat-sub">
                     Out of 100.00 Marks
                   </div>
                 </div>
-                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--brand-50)', color: 'var(--brand-700)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Icons.Target size={20} />
+                <div className="cohort-stat-icon" style={{ background: 'var(--brand-50)', color: 'var(--brand-700)' }}>
+                  <Icons.Target size={19} />
                 </div>
               </div>
             </div>

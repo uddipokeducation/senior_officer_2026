@@ -7,14 +7,15 @@ interface BrandLogoProps {
 }
 
 export function BrandLogo({ variant = 'light', size = 'md', subtitle }: BrandLogoProps) {
-  const iconDimensions = size === 'sm' ? 36 : size === 'lg' ? 50 : 42
+  const iconDimensions = size === 'sm' ? 36 : size === 'lg' ? 48 : 40
   const primaryTextColor = variant === 'light' ? '#FFFFFF' : '#064E3B'
   const secondaryTextColor = variant === 'light' ? '#6EE7B7' : '#059669'
   const subColor = variant === 'light' ? 'rgba(255,255,255,0.78)' : '#475569'
 
   return (
-    <div style={{ display: 'inline-flex', alignItems: 'center', gap: size === 'sm' ? '0.65rem' : '0.85rem' }}>
+    <div className="brand-logo-wrap" style={{ display: 'inline-flex', alignItems: 'center', gap: size === 'sm' ? '0.6rem' : '0.75rem', minWidth: 0, maxWidth: '100%' }}>
       <svg
+        className="brand-logo-icon"
         width={iconDimensions}
         height={iconDimensions}
         viewBox="0 0 64 64"
@@ -24,7 +25,6 @@ export function BrandLogo({ variant = 'light', size = 'md', subtitle }: BrandLog
       >
         <rect width="64" height="64" rx="15" fill="url(#uddipok_green_bg)" />
         <rect x="2.5" y="2.5" width="59" height="59" rx="12.5" stroke="#6EE7B7" strokeOpacity="0.4" strokeWidth="1.5" />
-        {/* Shield & Open Book / Graduation Emblem */}
         <path
           d="M32 10L14 18V31.5C14 43.1 21.7 53.5 32 56.5C42.3 53.5 50 43.1 50 31.5V18L32 10Z"
           fill="#064E3B"
@@ -33,7 +33,6 @@ export function BrandLogo({ variant = 'light', size = 'md', subtitle }: BrandLog
           strokeWidth="1.8"
           strokeLinejoin="round"
         />
-        {/* Academic Cap / Book Crest */}
         <path
           d="M19 27.5L32 21L45 27.5L32 34L19 27.5Z"
           fill="#10B981"
@@ -59,11 +58,12 @@ export function BrandLogo({ variant = 'light', size = 'md', subtitle }: BrandLog
         </defs>
       </svg>
 
-      <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: 1.15 }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: 1.15, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.45rem', flexWrap: 'wrap' }}>
           <span
+            className="brand-title-bn"
             style={{
-              fontSize: size === 'sm' ? '1.15rem' : size === 'lg' ? '1.55rem' : '1.3rem',
+              fontSize: size === 'sm' ? '1.1rem' : size === 'lg' ? '1.5rem' : '1.25rem',
               fontWeight: 700,
               color: primaryTextColor,
               fontFamily: "'Hind Siliguri', sans-serif",
@@ -73,8 +73,9 @@ export function BrandLogo({ variant = 'light', size = 'md', subtitle }: BrandLog
             উদ্দীপক
           </span>
           <span
+            className="brand-title-en"
             style={{
-              fontSize: size === 'sm' ? '0.85rem' : size === 'lg' ? '1.1rem' : '0.95rem',
+              fontSize: size === 'sm' ? '0.8rem' : size === 'lg' ? '1.05rem' : '0.88rem',
               fontWeight: 800,
               letterSpacing: '0.04em',
               color: secondaryTextColor,
@@ -86,8 +87,9 @@ export function BrandLogo({ variant = 'light', size = 'md', subtitle }: BrandLog
           </span>
         </div>
         <span
+          className="brand-subtitle"
           style={{
-            fontSize: size === 'sm' ? '0.7rem' : '0.76rem',
+            fontSize: size === 'sm' ? '0.68rem' : '0.73rem',
             fontWeight: 500,
             color: subColor,
             letterSpacing: '0.01em',
@@ -95,7 +97,7 @@ export function BrandLogo({ variant = 'light', size = 'md', subtitle }: BrandLog
             fontFamily: "'Hind Siliguri', 'Plus Jakarta Sans', sans-serif",
           }}
         >
-          {subtitle || 'অনলাইন পরীক্ষা ও মূল্যায়ন প্ল্যাটফর্ম • Online Assessment Portal'}
+          {subtitle || 'অনলাইন পরীক্ষা ও মূল্যায়ন প্ল্যাটফর্ম'}
         </span>
       </div>
     </div>

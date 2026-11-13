@@ -79,26 +79,26 @@ export default function RegistrationPage() {
             className="portal-nav-link"
           >
             <Icons.WhatsApp size={15} />
-            <span>Join WhatsApp Community</span>
+            <span>WhatsApp Community</span>
           </a>
         </div>
       </header>
 
       <main className="reg-main">
-        {/* LEFT COLUMN: EXAMINATION BRIEF & BRANDING */}
-        <section className="brief-panel">
+        {/* 1. HERO BRIEF & KPI METRICS */}
+        <section className="brief-hero">
           <div>
-            <div className="exam-tag-row" style={{ marginBottom: '0.85rem' }}>
+            <div className="exam-tag-row" style={{ marginBottom: '0.75rem' }}>
               <span className="exam-pill-badge">
                 <Icons.Shield size={14} />
-                Official Competitive Assessment
+                <span>Official Assessment</span>
               </span>
               <span className="exam-pill-secondary">JOB ID: 26101 • SET A</span>
             </div>
             <h1 className="hero-heading">
               Senior Officer <span>2026</span>
             </h1>
-            <p className="hero-sub" style={{ marginTop: '0.5rem' }}>
+            <p className="hero-sub" style={{ marginTop: '0.45rem' }}>
               9th Grade (General) Recruitment Test (MCQ Part) conducted on the{' '}
               <strong style={{ color: 'var(--brand-800)', fontFamily: 'var(--font-bn)' }}>উদ্দীপক (Uddipok Education)</strong>{' '}
               Computer-Based Examination Platform.
@@ -139,64 +139,11 @@ export default function RegistrationPage() {
               <div className="metric-tile-sub">Per Wrong Answer</div>
             </div>
           </div>
-
-          <div className="syllabus-card">
-            <div className="syllabus-card-header">
-              <h3>
-                <Icons.BarChart size={18} style={{ color: 'var(--brand-600)' }} />
-                <span>Section Breakdown & Marks Distribution</span>
-              </h3>
-              <span style={{ fontSize: '0.76rem', color: 'var(--slate-500)', fontWeight: 600 }}>6 Sections</span>
-            </div>
-            <div className="syllabus-grid">
-              {SYLLABUS_SECTIONS.map((sec) => {
-                const SecIcon = sec.Icon
-                return (
-                  <div key={sec.range} className="syllabus-item">
-                    <div className="syllabus-item-left">
-                      <div className="syllabus-icon-box">
-                        <SecIcon size={16} />
-                      </div>
-                      <span className="syllabus-name" title={sec.name}>{sec.name}</span>
-                    </div>
-                    <span className="syllabus-range">{sec.range}</span>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-
-          <div className="syllabus-card" style={{ padding: '1.15rem 1.35rem' }}>
-            <h3 style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-              <Icons.Shield size={16} style={{ color: 'var(--brand-600)' }} />
-              <span>Examination Guidelines & Marking Protocol</span>
-            </h3>
-            <ul className="rules-list">
-              <li>
-                <Icons.Check size={15} />
-                <span>
-                  Authoritative scoring formula: <strong>Final Score = (Correct × 1.00) − (Incorrect × 0.25)</strong>. Unanswered questions carry zero penalty.
-                </span>
-              </li>
-              <li>
-                <Icons.Check size={15} />
-                <span>
-                  Your 60-minute timer is synchronized with the server. Refreshing the browser preserves all selected responses without resetting the clock.
-                </span>
-              </li>
-              <li>
-                <Icons.Check size={15} />
-                <span>
-                  Navigate freely across all 6 subject sections and review your full scorecard and answer key immediately upon submission.
-                </span>
-              </li>
-            </ul>
-          </div>
         </section>
 
-        {/* RIGHT COLUMN: CANDIDATE REGISTRATION CARD */}
-        <section style={{ display: 'flex', justifyContent: 'center' }}>
-          <div className="reg-card" style={{ maxWidth: '100%' }}>
+        {/* 2. CANDIDATE REGISTRATION CARD (Appears immediately below KPIs on mobile, right column on desktop) */}
+        <section className="reg-form-col">
+          <div className="reg-card">
             <div className="reg-card-header">
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.74rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--brand-700)', marginBottom: '0.35rem' }}>
                 <Icons.User size={14} />
@@ -250,7 +197,7 @@ export default function RegistrationPage() {
                 )}
               </div>
 
-              <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+              <div className="form-group" style={{ marginBottom: '1.35rem' }}>
                 <label>Email Address <span>*</span></label>
                 <div className="input-wrapper">
                   <span className="input-icon"><Icons.Mail size={17} /></span>
@@ -278,15 +225,71 @@ export default function RegistrationPage() {
               </button>
             </form>
 
-            <div style={{ marginTop: '1.35rem', paddingTop: '1rem', borderTop: '1px solid var(--slate-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.45rem', fontSize: '0.76rem', color: 'var(--slate-500)' }}>
-              <Icons.Shield size={14} style={{ color: 'var(--brand-600)' }} />
+            <div style={{ marginTop: '1.25rem', paddingTop: '0.9rem', borderTop: '1px solid var(--slate-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.45rem', fontSize: '0.75rem', color: 'var(--slate-500)', textAlign: 'center' }}>
+              <Icons.Shield size={14} style={{ color: 'var(--brand-600)', flexShrink: 0 }} />
               <span>Secured by উদ্দীপক (Uddipok Education) Evaluation Engine</span>
             </div>
           </div>
         </section>
+
+        {/* 3. SYLLABUS BREAKDOWN & EXAMINATION GUIDELINES */}
+        <section className="brief-details">
+          <div className="syllabus-card">
+            <div className="syllabus-card-header">
+              <h3>
+                <Icons.BarChart size={18} style={{ color: 'var(--brand-600)', flexShrink: 0 }} />
+                <span>Section Breakdown & Marks Distribution</span>
+              </h3>
+              <span style={{ fontSize: '0.75rem', color: 'var(--slate-500)', fontWeight: 600, flexShrink: 0 }}>6 Sections</span>
+            </div>
+            <div className="syllabus-grid">
+              {SYLLABUS_SECTIONS.map((sec) => {
+                const SecIcon = sec.Icon
+                return (
+                  <div key={sec.range} className="syllabus-item">
+                    <div className="syllabus-item-left">
+                      <div className="syllabus-icon-box">
+                        <SecIcon size={16} />
+                      </div>
+                      <span className="syllabus-name">{sec.name}</span>
+                    </div>
+                    <span className="syllabus-range">{sec.range}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="syllabus-card">
+            <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--slate-900)', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <Icons.Shield size={16} style={{ color: 'var(--brand-600)', flexShrink: 0 }} />
+              <span>Examination Guidelines & Marking Protocol</span>
+            </h3>
+            <ul className="rules-list">
+              <li>
+                <Icons.Check size={15} />
+                <span>
+                  Authoritative scoring formula: <strong>Final Score = (Correct × 1.00) − (Incorrect × 0.25)</strong>. Unanswered questions carry zero penalty.
+                </span>
+              </li>
+              <li>
+                <Icons.Check size={15} />
+                <span>
+                  Your 60-minute timer is synchronized with the server. Refreshing the browser preserves all selected responses without resetting the clock.
+                </span>
+              </li>
+              <li>
+                <Icons.Check size={15} />
+                <span>
+                  Navigate freely across all 6 subject sections and review your full scorecard and answer key immediately upon submission.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </section>
       </main>
 
-      <div style={{ maxWidth: '1240px', width: '100%', margin: '0 auto', padding: '0 1.5rem 2.5rem' }}>
+      <div className="reg-bottom-banner">
         <WhatsAppCommunityBanner />
       </div>
 

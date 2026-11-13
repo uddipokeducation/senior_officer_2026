@@ -181,59 +181,61 @@ export default function ExamPage() {
   const paletteQuestions = showAllInPalette ? questions : sectionQuestions
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <header className="exam-header">
-        <div className="exam-header-inner">
-          <BrandLogo variant="light" size="sm" subtitle="Senior Officer 2026 • Recruitment Test (Set A)" />
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', overflowX: 'hidden' }}>
+      <div className="exam-sticky-top">
+        <header className="exam-header">
+          <div className="exam-header-inner">
+            <BrandLogo variant="light" size="sm" subtitle="Senior Officer 2026 • Set A" />
 
-          <div className="exam-header-right">
-            <div className="candidate-pill">
-              <Icons.User size={14} />
-              <span>{candidateName || 'Candidate'}</span>
-            </div>
-            <div className={timerClass} title="Server-Synchronized Countdown Timer">
-              <Icons.Clock size={17} />
-              <span>{formatTime(timeLeft)}</span>
-            </div>
-            <button
-              className="btn btn-sm"
-              style={{ background: '#10b981', color: '#022c22', fontWeight: 800 }}
-              onClick={() => setShowConfirm(true)}
-              disabled={submitting}
-            >
-              <Icons.CheckCircle size={15} />
-              <span>Finish & Submit</span>
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* SUBJECT SECTION TABS BAR */}
-      <div className="section-tabs-bar">
-        <div className="section-tabs-inner">
-          {SECTIONS.map((sec, idx) => {
-            const TabIcon = sec.Icon
-            const secQs = questions.filter(q => q.question_number >= sec.startNum && q.question_number <= sec.endNum)
-            const secAnswered = secQs.filter(q => answers[q.id]).length
-            const isActive = idx === activeSectionIdx
-            const isComplete = secAnswered === secQs.length && secQs.length > 0
-            return (
+            <div className="exam-header-right">
+              <div className="candidate-pill">
+                <Icons.User size={14} />
+                <span>{candidateName || 'Candidate'}</span>
+              </div>
+              <div className={timerClass} title="Server-Synchronized Countdown Timer">
+                <Icons.Clock size={16} />
+                <span>{formatTime(timeLeft)}</span>
+              </div>
               <button
-                key={sec.id}
-                className={`section-tab-btn${isActive ? ' active' : ''}`}
-                onClick={() => {
-                  setActiveSectionIdx(idx)
-                  window.scrollTo({ top: 0, behavior: 'smooth' })
-                }}
+                className="btn btn-sm exam-top-submit"
+                style={{ background: '#10b981', color: '#022c22', fontWeight: 800 }}
+                onClick={() => setShowConfirm(true)}
+                disabled={submitting}
               >
-                <TabIcon size={16} />
-                <span>{sec.shortName}</span>
-                <span className={`sec-badge${isComplete ? ' complete' : ''}`}>
-                  {secAnswered}/{secQs.length}
-                </span>
+                <Icons.CheckCircle size={15} />
+                <span>Submit ({totalAnswered}/100)</span>
               </button>
-            )
-          })}
+            </div>
+          </div>
+        </header>
+
+        {/* SUBJECT SECTION TABS BAR */}
+        <div className="section-tabs-bar">
+          <div className="section-tabs-inner">
+            {SECTIONS.map((sec, idx) => {
+              const TabIcon = sec.Icon
+              const secQs = questions.filter(q => q.question_number >= sec.startNum && q.question_number <= sec.endNum)
+              const secAnswered = secQs.filter(q => answers[q.id]).length
+              const isActive = idx === activeSectionIdx
+              const isComplete = secAnswered === secQs.length && secQs.length > 0
+              return (
+                <button
+                  key={sec.id}
+                  className={`section-tab-btn${isActive ? ' active' : ''}`}
+                  onClick={() => {
+                    setActiveSectionIdx(idx)
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
+                >
+                  <TabIcon size={16} />
+                  <span>{sec.shortName}</span>
+                  <span className={`sec-badge${isComplete ? ' complete' : ''}`}>
+                    {secAnswered}/{secQs.length}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
         </div>
       </div>
 
